@@ -25,14 +25,7 @@ object Analysis extends App {
 
   people
     .select("location", "year", "weeklyCases", "nextWeeksDeaths")
-    .where(
-      ($"location" !== "World") &&
-        ($"location" !== "Europe") &&
-        ($"location" !== "Africa") &&
-        ($"location" !== "North America") &&
-        ($"location" !== "South America") &&
-        ($"location" !== "Upper middle income")
-    )
+    .where(!$"location".isin("World", "Europe", "Africa", "North America", "South America", "Upper middle income"))
     .groupBy("location", "year")
     .sum("weeklyCases", "nextWeeksDeaths")
     .sort($"location", $"year")
