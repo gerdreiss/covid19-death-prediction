@@ -1,10 +1,8 @@
 package covid19
 
-import org.apache.log4j.Logger
 import org.apache.log4j.Level
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.Encoders
-import org.apache.spark.sql.Encoder
+import org.apache.log4j.Logger
+import org.apache.spark.sql._
 
 object Analysis extends App {
   // Set the log level to only print errors
@@ -30,11 +28,14 @@ object Analysis extends App {
     .where(
       ($"location" !== "World") &&
         ($"location" !== "Europe") &&
-        ($"location" !== "Africa")
+        ($"location" !== "Africa") &&
+        ($"location" !== "North America") &&
+        ($"location" !== "South America") &&
+        ($"location" !== "Upper middle income")
     )
     .groupBy("location", "year")
     .sum("weeklyCases", "nextWeeksDeaths")
     .sort($"location", $"year")
-    .show()
+    .show(660, false)
 
 }
