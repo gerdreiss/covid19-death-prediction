@@ -1,0 +1,13 @@
+.bloop/
+.bsp/
+.idea/
+.metals/
+.vscode/
+
+dist/
+target/
+
+metals.sbt
+
+node_modules/
+package-lock.json
