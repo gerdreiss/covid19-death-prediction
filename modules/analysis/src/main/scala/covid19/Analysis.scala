@@ -22,13 +22,26 @@ object Analysis extends App {
     .option("header", "true")
     .csv("data/CovidData.csv")
     .as[Data]
+    .cache()
 
+  // show data for all countries
   people
     .select("location", "year", "weeklyCases", "nextWeeksDeaths")
-    .where(!$"location".isin("World", "Europe", "Africa", "North America", "South America", "Upper middle income"))
+    .where(
+      !$"location".isin("World", "Asia", "Africa", "Europe", "North America", "South America", "Upper middle income")
+    )
     .groupBy("location", "year")
     .sum("weeklyCases", "nextWeeksDeaths")
     .sort($"location", $"year")
+    .show(660, false)
+
+  // show data for continents only
+  people
+    .select("location", "weeklyCases", "nextWeeksDeaths")
+    .where($"location".isin("Europe", "Asia", "Africa", "North America", "South America"))
+    .groupBy("location")
+    .sum("weeklyCases", "nextWeeksDeaths")
+    .sort($"sum(weeklyCases)")
     .show(660, false)
 
 }
