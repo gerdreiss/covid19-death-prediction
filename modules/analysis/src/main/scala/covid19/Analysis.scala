@@ -38,7 +38,7 @@ object Analysis extends App {
   // show data for continents only
   people
     .select("location", "weeklyCases", "nextWeeksDeaths")
-    .where($"location".isin("Europe", "Asia", "Africa", "North America", "South America"))
+    .where($"location".isin("Africa", "Asia", "Europe", "North America", "South America"))
     .groupBy("location")
     .sum("weeklyCases", "nextWeeksDeaths")
     .sort($"sum(nextWeeksDeaths)".desc)
