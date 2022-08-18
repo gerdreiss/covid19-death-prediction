@@ -33,7 +33,7 @@ object Analysis extends App {
     .groupBy("location", "year")
     .sum("weeklyCases", "nextWeeksDeaths")
     .sort($"location", $"year")
-    .show(660, false)
+    .show(660, truncate = false)
 
   // show data for continents only
   people
@@ -41,7 +41,7 @@ object Analysis extends App {
     .where($"location".isin("Europe", "Asia", "Africa", "North America", "South America"))
     .groupBy("location")
     .sum("weeklyCases", "nextWeeksDeaths")
-    .sort($"sum(weeklyCases)")
-    .show(660, false)
+    .sort($"sum(nextWeeksDeaths)".desc)
+    .show(660, truncate = false)
 
 }
