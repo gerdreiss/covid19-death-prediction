@@ -1,7 +1,6 @@
 package covid19
 
-import org.apache.log4j.Level
-import org.apache.log4j.Logger
+import org.apache.log4j.{ Level, Logger }
 import org.apache.spark.sql._
 
 object Analysis extends App {
@@ -18,10 +17,10 @@ object Analysis extends App {
 
   val people = spark
     .read
-    .schema(Encoders.product[Data].schema)
+    .schema(Encoders.product[RawData].schema)
     .option("header", "true")
     .csv("data/CovidData.csv")
-    .as[Data]
+    .as[RawData]
     .cache()
 
   // show data for all countries
@@ -42,6 +41,31 @@ object Analysis extends App {
     .groupBy("location")
     .sum("weeklyCases", "nextWeeksDeaths")
     .sort($"sum(nextWeeksDeaths)".desc)
+    .show(666, truncate = false)
+
+  // show vaccinations to death ratio
+  people
+    .select("location", "totalVaccinations", "nextWeeksDeaths")
+    .where(
+      !$"location".isin(
+        "World",
+        "Asia",
+        "Africa",
+        "Europe",
+        "European Union",
+        "North America",
+        "South America",
+        "High income",
+        "Lower middle income",
+        "Upper middle income",
+      )
+    )
+    .filter(!_.anyNull)
+    .groupBy("location")
+    .sum("totalVaccinations", "nextWeeksDeaths")
+    .sort($"sum(nextWeeksDeaths)".desc)
+    .as[(String, Double, Double)]
+    .map(row => TotalVacToDeaths(row._1, f"${row._2}%.0f", f"${row._3}%.0f"))
     .show(666, truncate = false)
 
 }

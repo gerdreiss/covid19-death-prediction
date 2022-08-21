@@ -1,6 +1,6 @@
 package covid19
 
-final case class Data(
+final case class RawData(
     id: Long,
     location: String,
     weeklyCases: Double,
@@ -21,4 +21,10 @@ final case class Data(
     dailyPeopleVaccinated: Double,
     dailyPeopleVaccinatedPerHundred: Double,
     nextWeeksDeaths: Double,
+)
+
+case class TotalVacToDeaths(
+    location: String,
+    totalVaccinations: String,
+    nextWeeksDeaths: String,
 )
